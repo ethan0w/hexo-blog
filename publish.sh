@@ -1,21 +1,31 @@
 #!/bin/sh
 
+#you need to generate a token on github.com and set Environment Variables on travis-ci.org
+
 if [ -n "$GITHUB_API_KEY" ]; then
     cd "$TRAVIS_BUILD_DIR"
     
     REPO=`git config remote.origin.url`
 	
-    REPO_URL=`echo $REPO | awk -F':' '{print $2}' | awk -v key="$GITHUB_API_KEY" -F'/' '{print "https://"$1":"key"@github.com/"$2}'`
+    REPO_URL=`echo $REPO | awk -F':' '{print $2}' | awk -v key="$GITHUB_API_KEY" -F'/' '{print "https://"$1":"key"@github.com/"$0}'`
     
     # This generates a `web` directory containing the website.
     cd public
+	
+    echo "init git repo now"
     git init
     git checkout -b gh-pages
     git add .
-    git -c user.name='travis' -c user.email='travis' commit -m init
+    
+    DATE="`date +%Y-%m-%d` `date +%H:%M:%S`"
+    MSG="rev:$DATE"
 
-    # Make sure to make the output quiet, or else the API token will leak!
-    # This works because the API key can replace your password.
+    echo "commit to local repo, message:$MSG"
+    git -c user.name='travis' -c user.email='travis' commit -m "$MSG"
+
+    echo "push to github now"    
     git push -f -q $REPO_URL gh-pages &2>/dev/null
     cd "$TRAVIS_BUILD_DIR"
+else
+    echo "GITHUB_API_KEY is empty"
 fi
