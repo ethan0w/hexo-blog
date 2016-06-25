@@ -24,7 +24,7 @@ if [ -n "$GITHUB_API_KEY" ]; then
     git -c user.name='travis' -c user.email='travis' commit -m "$MSG"
 
     echo "push to github now"    
-    git push -f -q $REPO_URL gh-pages &2>/dev/null
+    git push -f $REPO_URL gh-pages
     cd "$TRAVIS_BUILD_DIR"
 else
     echo "GITHUB_API_KEY is empty"
