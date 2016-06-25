@@ -7,9 +7,13 @@ if [ -n "$GITHUB_API_KEY" ]; then
     
     REPO=`git config remote.origin.url`
     echo "origin url:$REPO"
-	
-    REPO_URL=`echo $REPO | awk -F':' '{print $2}' | awk -v key="$GITHUB_API_KEY" -F'/' '{print "https://"$1":"key"@github.com/"$0}'`
     
+    if echo "$REPO" | grep "https://" ; then
+        REPO_URL=`echo $REPO | awk -v key="$GITHUB_API_KEY" -F'/' '{print "https://"$4":"key"@github.com/"$4"/"$5}'` 
+    else 
+        REPO_URL=`echo $REPO | awk -F':' '{print $2}' | awk -v key="$GITHUB_API_KEY" -F'/' '{print "https://"$1":"key"@github.com/"$0}'`
+    fi
+
     # This generates a `web` directory containing the website.
     cd public
 	
