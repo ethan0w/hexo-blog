@@ -6,6 +6,7 @@ if [ -n "$GITHUB_API_KEY" ]; then
     cd "$TRAVIS_BUILD_DIR"
     
     REPO=`git config remote.origin.url`
+    echo "origin url:$REPO"
 	
     REPO_URL=`echo $REPO | awk -F':' '{print $2}' | awk -v key="$GITHUB_API_KEY" -F'/' '{print "https://"$1":"key"@github.com/"$0}'`
     
